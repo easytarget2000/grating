@@ -6,17 +6,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import thingsilike.MONOQI.R;
+final class DialogBuilder {
 
-final class DialogManager {
-    private DialogManager() {
+    private DialogBuilder() {
     }
 
-    static Dialog create(
-            final Activity activity,
-            final boolean isShowNeutralButton,
-            final OnClickButtonListener listener
-    ) {
+    static Dialog create(final Activity activity, final OnClickButtonListener listener) {
 
         final String appName = activity.getString(activity.getApplicationInfo().labelRes);
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -54,20 +49,18 @@ final class DialogManager {
                 }
         );
 
-        if (isShowNeutralButton) {
-            builder.setNeutralButton(
-                    R.string.rate_dialog_cancel,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            PreferenceHelper.setRemindSelectedDate(activity);
+        builder.setNeutralButton(
+                R.string.rate_dialog_cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PreferenceHelper.setRemindSelectedDate(activity);
 
-                            if (listener != null)
-                                listener.onClickButton(OnClickButtonListener.RateButton.REMIND);
-                        }
+                        if (listener != null)
+                            listener.onClickButton(OnClickButtonListener.RateButton.REMIND);
                     }
-            );
-        }
+                }
+        );
 
         builder.setNegativeButton(
                 R.string.rate_dialog_no,
@@ -81,6 +74,7 @@ final class DialogManager {
                     }
                 }
         );
+
         return builder.create();
     }
 }

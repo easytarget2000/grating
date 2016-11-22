@@ -120,7 +120,7 @@ public class RatingCoordinator {
     private void showRateDialog(Activity activity) {
         if (!activity.isFinishing()) {
             resetConditions(activity);
-            DialogManager.create(activity, true, mListener).show();
+            DialogBuilder.create(activity, mListener).show();
         }
     }
 
