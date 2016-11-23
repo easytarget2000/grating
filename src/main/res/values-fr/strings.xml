@@ -1,0 +1,7 @@
+<resources>
+    <string name="rate_dialog_title">Notez %s</string>
+    <string name="rate_dialog_message">Si vous aimez utiliser %s, n\'oubliez pas de donner votre avis sur l\'App Store. Cela ne prend qu\'une minute. Merci d\'avance pour votre soutien !</string>
+    <string name="rate_dialog_ok">Noter maintenant</string>
+    <string name="rate_dialog_cancel">Me le rappeler ultérieurement</string>
+    <string name="rate_dialog_no">Non, merci</string>
+</resources>
