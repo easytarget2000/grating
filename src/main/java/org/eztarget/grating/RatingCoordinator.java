@@ -31,6 +31,8 @@ public class RatingCoordinator {
 
     private OnClickButtonListener mListener;
 
+    private boolean mForceDialog = false;
+
     private RatingCoordinator() {
     }
 
@@ -90,8 +92,17 @@ public class RatingCoordinator {
         }
     }
 
+    public void forceDialogOnNextResume() {
+        mForceDialog = true;
+    }
+
     public void onResume(final Activity activity) {
-        if (mPaused) {
+        final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(activity);
+        if (VERBOSE) {
+            Log.d(TAG, "Agreed to rating: " + ratingAgreed);
+        }
+
+        if (mPaused && ratingAgreed) {
             mSessionTimer = new CountDownTimer(mAfterResumeDelay, 1000L) {
                 @Override
                 public void onTick(long l) {
@@ -114,7 +125,7 @@ public class RatingCoordinator {
     }
 
     private void showRateDialogIfMeetsConditions(final Activity activity) {
-        if (shouldShowRateDialog(activity.getApplicationContext())) {
+        if (mForceDialog || shouldShowRateDialog(activity.getApplicationContext())) {
             showRateDialog(activity);
         }
     }
@@ -129,16 +140,11 @@ public class RatingCoordinator {
     private void resetConditions(final Context context) {
         PreferenceHelper.from(context).resetNumberOfLaunches();
         PreferenceHelper.from(context).resetNumberOfRatingEvents();
+        mForceDialog = false;
     }
 
     private boolean shouldShowRateDialog(final Context context) {
-        final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(context);
-        if (VERBOSE) {
-            Log.d(TAG, "Agreed to rating: " + ratingAgreed);
-        }
-
-        return ratingAgreed
-                && didReachNumberOfLaunches(context)
+        return didReachNumberOfLaunches(context)
                 && didReachInstallationAge(context)
                 && didReachNumberOfEvents(context)
                 && didReachReminderAge(context);
