@@ -11,7 +11,7 @@ public class RatingCoordinator {
 
     private static final String TAG = "rate/" + RatingCoordinator.class.getSimpleName();
 
-    private static final boolean VERBOSE = false;
+    private static final boolean VERBOSE = true;
 
     private static RatingCoordinator sInstance;
 
@@ -30,6 +30,8 @@ public class RatingCoordinator {
     private boolean mPaused = true;
 
     private OnClickButtonListener mListener;
+
+    private boolean mTimerFinished = false;
 
     private RatingCoordinator() {
     }
@@ -85,6 +87,7 @@ public class RatingCoordinator {
     public void onPause() {
         mPaused = true;
         mSessionTimer.cancel();
+        mTimerFinished = false;
     }
 
     public void onResume(final Activity activity) {
@@ -97,12 +100,12 @@ public class RatingCoordinator {
 
                 @Override
                 public void onFinish() {
-                    handleEvent(activity);
+                    mTimerFinished = true;
+                    showRateDialogIfMeetsConditions(activity);
                 }
             }.start();
 
             mPaused = false;
-            showRateDialogIfMeetsConditions(activity);
         }
     }
 
@@ -125,6 +128,7 @@ public class RatingCoordinator {
     }
 
     void resetConditions(final Context context) {
+        mTimerFinished = false;
         PreferenceHelper.from(context).resetNumberOfLaunches();
         PreferenceHelper.from(context).resetNumberOfRatingEvents();
     }
@@ -136,6 +140,7 @@ public class RatingCoordinator {
         }
 
         return ratingAgreed
+                && mTimerFinished
                 && didReachNumberOfLaunches(context)
                 && didReachInstallationAge(context)
                 && didReachNumberOfEvents(context)
