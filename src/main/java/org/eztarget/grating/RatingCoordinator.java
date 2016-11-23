@@ -25,13 +25,11 @@ public class RatingCoordinator {
 
     private CountDownTimer mSessionTimer;
 
-    private long mSessionMillis = 30L * 1000L;
+    private long mAfterResumeDelay = 10L * 1000L;
 
     private boolean mPaused = true;
 
     private OnClickButtonListener mListener;
-
-    private boolean mTimerFinished = false;
 
     private RatingCoordinator() {
     }
@@ -52,8 +50,8 @@ public class RatingCoordinator {
         return this;
     }
 
-    public RatingCoordinator setSessionLength(final int lengthMillis) {
-        mSessionMillis = lengthMillis;
+    public RatingCoordinator setAfterResumeDelay(final int lengthMillis) {
+        mAfterResumeDelay = lengthMillis;
         return this;
     }
 
@@ -86,21 +84,22 @@ public class RatingCoordinator {
 
     public void onPause() {
         mPaused = true;
-        mSessionTimer.cancel();
-        mTimerFinished = false;
+
+        if (mSessionTimer != null) {
+            mSessionTimer.cancel();
+        }
     }
 
     public void onResume(final Activity activity) {
         if (mPaused) {
-            mSessionTimer = new CountDownTimer(mSessionMillis, 1000L) {
+            mSessionTimer = new CountDownTimer(mAfterResumeDelay, 1000L) {
                 @Override
                 public void onTick(long l) {
-//                    mSessionMillis = l;
+//                    mAfterResumeDelay = l;
                 }
 
                 @Override
                 public void onFinish() {
-                    mTimerFinished = true;
                     showRateDialogIfMeetsConditions(activity);
                 }
             }.start();
@@ -111,7 +110,7 @@ public class RatingCoordinator {
 
     public void handleEvent(final Activity activity) {
         PreferenceHelper.from(activity).increaseNumberOfRatingEvents();
-        showRateDialogIfMeetsConditions(activity);
+//        showRateDialogIfMeetsConditions(activity);
     }
 
     private void showRateDialogIfMeetsConditions(final Activity activity) {
@@ -127,8 +126,7 @@ public class RatingCoordinator {
         }
     }
 
-    void resetConditions(final Context context) {
-        mTimerFinished = false;
+    private void resetConditions(final Context context) {
         PreferenceHelper.from(context).resetNumberOfLaunches();
         PreferenceHelper.from(context).resetNumberOfRatingEvents();
     }
@@ -140,7 +138,6 @@ public class RatingCoordinator {
         }
 
         return ratingAgreed
-                && mTimerFinished
                 && didReachNumberOfLaunches(context)
                 && didReachInstallationAge(context)
                 && didReachNumberOfEvents(context)
