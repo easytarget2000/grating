@@ -6,9 +6,15 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
-final class DialogBuilder {
+public final class RatingNavigator {
 
-    private DialogBuilder() {
+    public static void startGooglePlayActivity(final Activity activity) {
+        final String packageName = activity.getPackageName();
+        activity.startActivity(
+                new Intent(Intent.ACTION_VIEW, UriHelper.getGooglePlay(packageName))
+        );
+
+        PreferenceHelper.from(activity).disableRating();
     }
 
     static Dialog create(final Activity activity, final OnClickButtonListener listener) {
@@ -32,15 +38,7 @@ final class DialogBuilder {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        final String packageName = activity.getPackageName();
-                        final Intent intent = new Intent(
-                                Intent.ACTION_VIEW,
-                                UriHelper.getGooglePlay(packageName)
-                        );
-
-                        activity.startActivity(intent);
-
-                        PreferenceHelper.from(activity).disableRating();
+                        startGooglePlayActivity(activity);
 
                         if (listener != null) {
                             listener.onClickButton(OnClickButtonListener.RateButton.RATE);
@@ -77,4 +75,6 @@ final class DialogBuilder {
 
         return builder.create();
     }
+
+
 }
