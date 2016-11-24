@@ -5,13 +5,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 
 public final class RatingNavigator {
+
+    private static final String STORE_BASE_URL = "https://play.google.com/store/apps/details?id=";
 
     public static void startGooglePlayActivity(final Activity activity) {
         final String packageName = activity.getPackageName();
         activity.startActivity(
-                new Intent(Intent.ACTION_VIEW, UriHelper.getGooglePlay(packageName))
+                new Intent(Intent.ACTION_VIEW, Uri.parse(STORE_BASE_URL + packageName))
         );
 
         PreferenceHelper.from(activity).disableRating();
