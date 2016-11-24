@@ -47,7 +47,7 @@ public class RatingCoordinator {
         return sInstance;
     }
 
-    public RatingCoordinator setVerboseEnabled(final boolean verbose) {
+    public RatingCoordinator setVerbosityEnabled(final boolean verbose) {
         mVerbose = verbose;
         return this;
     }
