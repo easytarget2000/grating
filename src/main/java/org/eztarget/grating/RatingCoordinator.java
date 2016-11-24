@@ -11,7 +11,7 @@ public class RatingCoordinator {
 
     private static final String TAG = "rate/" + RatingCoordinator.class.getSimpleName();
 
-    private static final boolean VERBOSE = true;
+    private boolean mVerbose = false;
 
     private static RatingCoordinator sInstance;
 
@@ -31,7 +31,7 @@ public class RatingCoordinator {
 
     private OnClickButtonListener mListener;
 
-    private boolean mForceDialog = false;
+    private boolean mIgnoreUsage = false;
 
     private RatingCoordinator() {
     }
@@ -45,6 +45,11 @@ public class RatingCoordinator {
             }
         }
         return sInstance;
+    }
+
+    public RatingCoordinator setVerboseEnabled(final boolean verbose) {
+        mVerbose = verbose;
+        return this;
     }
 
     public RatingCoordinator setNumberOfLaunchesThreshold(int numberOfLaunches) {
@@ -92,13 +97,16 @@ public class RatingCoordinator {
         }
     }
 
-    public void forceDialogOnNextResume() {
-        mForceDialog = true;
+    public void ignoreUsageOnce() {
+        if (mVerbose) {
+            Log.d(TAG, "Will ignore usage counters once.");
+        }
+        mIgnoreUsage = true;
     }
 
     public void onResume(final Activity activity) {
         final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(activity);
-        if (VERBOSE) {
+        if (mVerbose) {
             Log.d(TAG, "Agreed to rating: " + ratingAgreed);
         }
 
@@ -125,7 +133,7 @@ public class RatingCoordinator {
     }
 
     private void showRateDialogIfMeetsConditions(final Activity activity) {
-        if (mForceDialog || shouldShowRateDialog(activity.getApplicationContext())) {
+        if (shouldShowRateDialog(activity.getApplicationContext())) {
             showRateDialog(activity);
         }
     }
@@ -138,22 +146,40 @@ public class RatingCoordinator {
     }
 
     private void resetConditions(final Context context) {
-        PreferenceHelper.from(context).resetNumberOfLaunches();
+//        PreferenceHelper.from(context).resetNumberOfLaunches();
         PreferenceHelper.from(context).resetNumberOfRatingEvents();
-        mForceDialog = false;
+        mIgnoreUsage = false;
     }
 
     private boolean shouldShowRateDialog(final Context context) {
+
+        if (!PreferenceHelper.isRatingEnabled(context)) {
+            return false;
+        }
+
+        if (!didReachReminderAge(context)) {
+            if (mVerbose) {
+                Log.d(TAG, "Before Reminder date.");
+            }
+            return false;
+        }
+
+        if (mIgnoreUsage) {
+            if (mVerbose) {
+                Log.d(TAG, "Ignoring usage.");
+            }
+            return true;
+        }
+
         return didReachNumberOfLaunches(context)
                 && didReachInstallationAge(context)
-                && didReachNumberOfEvents(context)
-                && didReachReminderAge(context);
+                && didReachNumberOfEvents(context);
     }
 
     private boolean didReachNumberOfLaunches(final Context context) {
         final int numberOfLaunches = PreferenceHelper.from(context).getNumberOfLaunches();
 
-        if (VERBOSE) {
+        if (mVerbose) {
             Log.d(TAG, "Number of launches: " + numberOfLaunches + "/" + mNumberOfLaunchesThreshold);
         }
         return numberOfLaunches >= mNumberOfLaunchesThreshold;
@@ -161,7 +187,7 @@ public class RatingCoordinator {
 
     private boolean didReachInstallationAge(final Context context) {
         final long installDate = PreferenceHelper.getInstallDate(context);
-        if (VERBOSE) {
+        if (mVerbose) {
             Log.d(TAG, "Installation Date: " + new Date(installDate));
         }
         return isOverDate(installDate, mInstallDaysThreshold);
@@ -169,7 +195,7 @@ public class RatingCoordinator {
 
     private boolean didReachNumberOfEvents(final Context context) {
         final int numberOfEvents = PreferenceHelper.from(context).getNumberOfRatingEvents();
-        if (VERBOSE) {
+        if (mVerbose) {
             Log.d(TAG, "Number of events: " + numberOfEvents + "/" + mNumberOfEventThreshold);
         }
         return numberOfEvents > mNumberOfEventThreshold;
@@ -177,8 +203,9 @@ public class RatingCoordinator {
 
     private boolean didReachReminderAge(final Context context) {
         final long remindDate = PreferenceHelper.getRemindSelectedDate(context);
-        if (VERBOSE) {
-            Log.d(TAG, "Reminder Date: " + new Date(remindDate));
+        if (mVerbose) {
+            Log.d(TAG, "'Reminder Selected' date: " + new Date(remindDate));
+            Log.d(TAG, "Reminder after " + mDaysTillReminder + " days.");
         }
         return isOverDate(remindDate, mDaysTillReminder);
     }
