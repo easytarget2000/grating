@@ -9,7 +9,8 @@
     <string name="rate_dialog_no">Nein, Danke</string>
 
     <string name="rate_dialog_support_message">
-        Möchtest du uns in einer Email mehr Details mitteilen?
+        Möchtest du uns in einer Email mehr Details zu deiner Bewertung mitteilen?
+        \nDanke für die Unterstützung!
     </string>
     <string name="rate_dialog_thank_message">
         Danke für die Unterstützung!

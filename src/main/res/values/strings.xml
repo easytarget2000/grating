@@ -9,7 +9,8 @@
     <string name="rate_dialog_no">No, Thanks</string>
 
     <string name="rate_dialog_support_message">
-        Would you like to tell us more about your experience by sending us an email?
+        Thanks for your support!
+        \nWould you like to tell us more about your experience by sending us an email?
     </string>
     <string name="rate_dialog_thank_message">
         Thanks for your support!
