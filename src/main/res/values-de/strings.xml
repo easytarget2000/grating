@@ -4,10 +4,15 @@
     <string name="rate_dialog_title">Bewerte %s</string>
     <string name="rate_dialog_message">
         Wenn dir %s gefällt, würdest du es bitte bewerten?
-        Dies wird nicht länger als eine Minute dauern.
-        Danke für die Unterstützung!
     </string>
     <string name="rate_dialog_cancel">Später</string>
     <string name="rate_dialog_no">Nein, Danke</string>
+
+    <string name="rate_dialog_support_message">
+        Möchtest du uns in einer Email mehr Details mitteilen?
+    </string>
+    <string name="rate_dialog_thank_message">
+        Danke für die Unterstützung!
+    </string>
 
 </resources>
