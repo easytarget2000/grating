@@ -3,6 +3,8 @@ package org.eztarget.grating;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -18,7 +20,7 @@ public class MessageDialog extends DialogFragment {
     private static final String ARG_IS_SUPPORT_MSG = "SUPPORT_MSG";
 
     private Purpose mPurpose;
-    
+
     static MessageDialog newInstance(final Purpose purpose) {
         final MessageDialog dialog = new MessageDialog();
 
@@ -60,6 +62,17 @@ public class MessageDialog extends DialogFragment {
 
     private void startSupportEmailIntent() {
 
+        final String address = RatingCoordinator.getInstance().getSupportEmailAddress();
+
+        final Intent emailIntent = new Intent(
+                Intent.ACTION_SENDTO,
+                Uri.fromParts("mailto", address, null)
+        );
+
+        final String appName = getString(getActivity().getApplicationInfo().labelRes);
+
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, appName + " App");
+        startActivity(Intent.createChooser(emailIntent, address));
     }
 
     public enum Purpose {

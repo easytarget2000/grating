@@ -23,7 +23,7 @@ public class RatingDialog extends DialogFragment {
 
     private float mPlayStoreMinRating = 4f;
 
-    private float mSupportMaxRating = 2f;
+    private float mSupportMaxRating = 3f;
 
     public static RatingDialog newInstance(final boolean showRatingBar) {
         final RatingDialog ratingDialog = new RatingDialog();
@@ -109,9 +109,9 @@ public class RatingDialog extends DialogFragment {
 
     private void handleRating(final float value) {
 
-        if (value < mSupportMaxRating) {
+        if (value <= mSupportMaxRating) {
             showSupportDialog();
-        } else if (value > mPlayStoreMinRating) {
+        } else if (value >= mPlayStoreMinRating) {
             new RatingNavigator((AppCompatActivity) getActivity()).startGooglePlayActivity();
         } else {
             showThankYouDialog();

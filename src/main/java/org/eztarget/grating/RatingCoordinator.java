@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
@@ -33,6 +34,8 @@ public class RatingCoordinator {
     private OnClickButtonListener mListener;
 
     private boolean mIgnoreUsage = false;
+
+    private String mSupportEmail;
 
     private RatingCoordinator() {
     }
@@ -81,6 +84,24 @@ public class RatingCoordinator {
     public RatingCoordinator setOnClickButtonListener(OnClickButtonListener listener) {
         mListener = listener;
         return this;
+    }
+
+    OnClickButtonListener getOnClickButtonListener() {
+        return mListener;
+    }
+
+    public RatingCoordinator enableRatingBar(final String supportEmailAddress) {
+        mSupportEmail = supportEmailAddress;
+        return this;
+    }
+
+    public RatingCoordinator disableRatingBar() {
+        mSupportEmail = null;
+        return this;
+    }
+
+    String getSupportEmailAddress() {
+        return mSupportEmail;
     }
 
     public void handleLaunch(final Context context) {
@@ -142,7 +163,7 @@ public class RatingCoordinator {
     private void showRateDialog(AppCompatActivity activity) {
         if (!activity.isFinishing()) {
             resetConditions(activity);
-            new RatingNavigator(activity).showDialog(true);
+            new RatingNavigator(activity).showDialog(!TextUtils.isEmpty(mSupportEmail));
         }
     }
 
