@@ -3,6 +3,7 @@ package org.eztarget.grating;
 import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.Date;
@@ -104,7 +105,7 @@ public class RatingCoordinator {
         mIgnoreUsage = true;
     }
 
-    public void onResume(final Activity activity) {
+    public void onResume(final AppCompatActivity activity) {
         final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(activity);
         if (mVerbose) {
             Log.d(TAG, "Agreed to rating: " + ratingAgreed);
@@ -132,16 +133,16 @@ public class RatingCoordinator {
 //        showRateDialogIfMeetsConditions(activity);
     }
 
-    private void showRateDialogIfMeetsConditions(final Activity activity) {
+    private void showRateDialogIfMeetsConditions(final AppCompatActivity activity) {
         if (shouldShowRateDialog(activity.getApplicationContext())) {
             showRateDialog(activity);
         }
     }
 
-    private void showRateDialog(Activity activity) {
+    private void showRateDialog(AppCompatActivity activity) {
         if (!activity.isFinishing()) {
             resetConditions(activity);
-            RatingNavigator.create(activity, mListener).show();
+            new RatingNavigator(activity).showDialog(true);
         }
     }
 

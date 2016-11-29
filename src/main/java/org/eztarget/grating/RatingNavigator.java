@@ -1,83 +1,34 @@
 package org.eztarget.grating;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
 
 public final class RatingNavigator {
 
+    private static final String TAG = RatingNavigator.class.getSimpleName();
+
     private static final String STORE_BASE_URL = "https://play.google.com/store/apps/details?id=";
 
-    public static void startGooglePlayActivity(final Activity activity) {
-        final String packageName = activity.getPackageName();
-        activity.startActivity(
+    private AppCompatActivity mActivity;
+
+    public RatingNavigator(final AppCompatActivity activity) {
+        mActivity = activity;
+    }
+
+    public void startGooglePlayActivity() {
+        final String packageName = mActivity.getPackageName();
+        mActivity.startActivity(
                 new Intent(Intent.ACTION_VIEW, Uri.parse(STORE_BASE_URL + packageName))
         );
 
-        PreferenceHelper.from(activity).disableRating();
+        PreferenceHelper.from(mActivity).disableRating();
     }
 
-    static Dialog create(final Activity activity, final OnClickButtonListener listener) {
-
-        final String appName = activity.getString(activity.getApplicationInfo().labelRes);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle(
-                String.format(activity.getString(R.string.rate_dialog_title), appName)
-        );
-        builder.setMessage(
-                String.format(activity.getString(R.string.rate_dialog_message), appName)
-        );
-
-//        if (view != null) {
-//            builder.setView(view);
-//        }
-
-        builder.setPositiveButton(
-                R.string.rate_dialog_ok,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        startGooglePlayActivity(activity);
-
-                        if (listener != null) {
-                            listener.onClickButton(OnClickButtonListener.RateButton.RATE);
-                        }
-                    }
-                }
-        );
-
-        builder.setNeutralButton(
-                R.string.rate_dialog_cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PreferenceHelper.setRemindSelectedDate(activity);
-
-                        if (listener != null)
-                            listener.onClickButton(OnClickButtonListener.RateButton.REMIND);
-                    }
-                }
-        );
-
-        builder.setNegativeButton(
-                R.string.rate_dialog_no,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        PreferenceHelper.from(activity).disableRating();
-
-                        if (listener != null)
-                            listener.onClickButton(OnClickButtonListener.RateButton.DECLINE);
-                    }
-                }
-        );
-
-        return builder.create();
+    RatingDialog showDialog(final boolean showRatingBar) {
+        final RatingDialog ratingDialog = RatingDialog.newInstance(showRatingBar);
+        ratingDialog.show(mActivity.getSupportFragmentManager(), TAG);
+        return ratingDialog;
     }
-
 
 }
