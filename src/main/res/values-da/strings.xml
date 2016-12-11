@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="rate_dialog_title">Bedøm %s</string>
+    <string name="rate_dialog_message">
+        Hvis du nyder at bruge %s, vil du bruge et øjeblik på at bedømme det?
+    </string>
+    <string name="rate_dialog_ok">Bedøm nu</string>
+    <string name="rate_dialog_cancel">Senere</string>
+    <string name="rate_dialog_no">Nej tak</string>
+
+    <string name="rate_dialog_support_message">
+        Tak for din støtte!
+        \nVil du fortælle os mere om din oplevelse ved at sende os en mail?
+    </string>
+    <string name="rate_dialog_thank_message">
+        Tak for din støtte!
+    </string>
+
+</resources>
