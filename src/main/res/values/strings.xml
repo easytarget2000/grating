@@ -2,20 +2,20 @@
 
 <resources>
 
-    <string name="rate_dialog_title">%s को रेट करें</string>
+    <string name="rate_dialog_title">Rate %s</string>
     <string name="rate_dialog_message">
-        यदि आपको %s उप्योगित लगा तो कृप्या इसे रेट करें
+        If you enjoy using %s, would you mind taking a moment to rate it?
     </string>
-    <string name="rate_dialog_ok">ठीक है</string>
-    <string name="rate_dialog_cancel">बाद में</string>
-    <string name="rate_dialog_no">नहीं, धन्यवाद</string>
+    <string name="rate_dialog_ok">Rate It Now</string>
+    <string name="rate_dialog_cancel">Later</string>
+    <string name="rate_dialog_no">No, Thanks</string>
 
     <string name="rate_dialog_support_message">
-        आपके समर्थन के लिए धन्यवाद!
-        \nक्या आप हमें ईमेल द्वारा अपने अनुभव के बारे में कुछ और बताना चाहेंगे?
+        Thanks for your support!
+        \nWould you like to tell us more about your experience by sending us an email?
     </string>
     <string name="rate_dialog_thank_message">
-        आपके समर्थन के लिए धन्यवाद!
+        Thanks for your support!
     </string>
 
 </resources>
