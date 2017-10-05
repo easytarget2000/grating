@@ -78,7 +78,8 @@ public class RatingDialog extends DialogFragment {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new RatingNavigator(activity).startGooglePlayActivity();
+                            final AppCompatActivity activity = (AppCompatActivity) getActivity();
+                            RatingCoordinator.getInstance().didSelectRateNow(activity);
                         }
                     }
             );
@@ -89,7 +90,7 @@ public class RatingDialog extends DialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PreferenceHelper.setRemindSelectedDate(activity);
+                        RatingCoordinator.getInstance().didSelectRemindLater(getContext());
                     }
                 }
         );
@@ -99,7 +100,7 @@ public class RatingDialog extends DialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PreferenceHelper.from(activity).disableRating();
+                        RatingCoordinator.getInstance().didSelectDisable(getContext());
                     }
                 }
         );

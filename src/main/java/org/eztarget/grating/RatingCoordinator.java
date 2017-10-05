@@ -3,6 +3,7 @@ package org.eztarget.grating;
 import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +21,8 @@ public class RatingCoordinator {
     private long mInstallDaysThreshold = 10;
 
     private int mNumberOfLaunchesThreshold = 10;
+
+    private int mNumberOfLaunchesReminderIncrease = 0;
 
     private int mDaysTillReminder = 1;
 
@@ -78,6 +81,17 @@ public class RatingCoordinator {
 
     public RatingCoordinator setNumberOfEventsThreshold(final int numberOfEvents) {
         mNumberOfEventThreshold = numberOfEvents;
+        return this;
+    }
+
+    public RatingCoordinator setNumberOfLaunchesReminderIncrease(
+            final int numberOfLaunchesReminderIncrease
+    ) {
+        if (numberOfLaunchesReminderIncrease < 0) {
+            return this;
+        }
+
+        mNumberOfLaunchesReminderIncrease = numberOfLaunchesReminderIncrease;
         return this;
     }
 
@@ -151,7 +165,6 @@ public class RatingCoordinator {
 
     public void handleEvent(final Activity activity) {
         PreferenceHelper.from(activity).increaseNumberOfRatingEvents();
-//        showRateDialogIfMeetsConditions(activity);
     }
 
     private void showRateDialogIfMeetsConditions(final AppCompatActivity activity) {
@@ -168,7 +181,6 @@ public class RatingCoordinator {
     }
 
     private void resetConditions(final Context context) {
-//        PreferenceHelper.from(context).resetNumberOfLaunches();
         PreferenceHelper.from(context).resetNumberOfRatingEvents();
         mIgnoreUsage = false;
     }
@@ -237,4 +249,18 @@ public class RatingCoordinator {
                 >= thresholdMillis * 24L * 60L * 60L * 1000L;
     }
 
+
+    void didSelectRateNow(@NonNull final AppCompatActivity activity) {
+        new RatingNavigator(activity).startGooglePlayActivity();
+    }
+
+    void didSelectRemindLater(@NonNull final Context context) {
+        PreferenceHelper.setRemindSelectedDate(context);
+        mNumberOfLaunchesThreshold += mNumberOfLaunchesReminderIncrease;
+    }
+
+    void didSelectDisable(@NonNull final Context context) {
+        PreferenceHelper.from(context).disableRating();
+
+    }
 }
