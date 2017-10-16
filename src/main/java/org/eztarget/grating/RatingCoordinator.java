@@ -140,7 +140,7 @@ public class RatingCoordinator {
         mIgnoreUsage = true;
     }
 
-    public void onResume(final AppCompatActivity activity) {
+    public void onResume(@NonNull final Activity activity) {
         final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(activity);
         if (mVerbose) {
             Log.d(TAG, "Agreed to rating: " + ratingAgreed);
@@ -167,13 +167,13 @@ public class RatingCoordinator {
         PreferenceHelper.from(activity).increaseNumberOfRatingEvents();
     }
 
-    private void showRateDialogIfMeetsConditions(final AppCompatActivity activity) {
+    private void showRateDialogIfMeetsConditions(@NonNull final Activity activity) {
         if (shouldShowRateDialog(activity.getApplicationContext())) {
             showRateDialog(activity);
         }
     }
 
-    private void showRateDialog(AppCompatActivity activity) {
+    private void showRateDialog(@NonNull Activity activity) {
         if (!activity.isFinishing()) {
             resetConditions(activity);
             new RatingNavigator(activity).showDialog(!TextUtils.isEmpty(mSupportEmail));

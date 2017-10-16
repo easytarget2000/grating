@@ -1,11 +1,12 @@
 package org.eztarget.grating;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ public class RatingDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final AppCompatActivity activity = (AppCompatActivity) getActivity();
+        final Activity activity = getActivity();
 
         final String appName = getString(activity.getApplicationInfo().labelRes);
 
