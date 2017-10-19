@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +39,10 @@ public class RatingDialog extends DialogFragment {
 
     public RatingDialog() {
 
+    }
+
+    public Context getContext() {
+        return getActivity();
     }
 
     @NonNull
