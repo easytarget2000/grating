@@ -119,7 +119,7 @@ public class RatingDialog extends DialogFragment {
         if (value <= mSupportMaxRating) {
             showSupportDialog();
         } else if (value >= mPlayStoreMinRating) {
-            new RatingNavigator((AppCompatActivity) getActivity()).startGooglePlayActivity();
+            new RatingNavigator(getActivity()).startGooglePlayActivity();
         } else {
             showThankYouDialog();
         }
