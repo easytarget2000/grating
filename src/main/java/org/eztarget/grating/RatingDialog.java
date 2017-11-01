@@ -84,7 +84,7 @@ public class RatingDialog extends DialogFragment {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            final AppCompatActivity activity = (AppCompatActivity) getActivity();
+                            final Activity activity = getActivity();
                             RatingCoordinator.getInstance().didSelectRateNow(activity);
                         }
                     }

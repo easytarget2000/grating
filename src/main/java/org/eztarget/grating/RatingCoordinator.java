@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +12,8 @@ import java.util.Date;
 public class RatingCoordinator {
 
     private static final String TAG = "rate/" + RatingCoordinator.class.getSimpleName();
+
+    private static final long MILLIS_PER_DAY = 24L * 60L * 60L * 1000L;
 
     private boolean mVerbose = false;
 
@@ -245,12 +246,12 @@ public class RatingCoordinator {
     }
 
     private boolean isOverDate(final long targetMillis, final long thresholdMillis) {
-        return System.currentTimeMillis() - targetMillis
-                >= thresholdMillis * 24L * 60L * 60L * 1000L;
+        final float now = System.currentTimeMillis();
+        return now - targetMillis >= thresholdMillis * MILLIS_PER_DAY;
     }
 
 
-    void didSelectRateNow(@NonNull final AppCompatActivity activity) {
+    void didSelectRateNow(@NonNull final Activity activity) {
         new RatingNavigator(activity).startGooglePlayActivity();
     }
 
