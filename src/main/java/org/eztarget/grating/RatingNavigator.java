@@ -23,7 +23,7 @@ public final class RatingNavigator {
                 new Intent(Intent.ACTION_VIEW, Uri.parse(STORE_BASE_URL + packageName))
         );
 
-        PreferenceHelper.from(mActivity).disableRating();
+        PersistenceHelper.from(mActivity).disableRating();
     }
 
     RatingDialog showDialog(final boolean showRatingBar) {
