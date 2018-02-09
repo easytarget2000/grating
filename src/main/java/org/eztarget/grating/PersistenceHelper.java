@@ -10,21 +10,21 @@ import android.util.Log;
  *
  */
 
-class PreferenceHelper {
+class PersistenceHelper {
 
-    private static final String TAG = "rate/" + PreferenceHelper.class.getSimpleName();
+    private static final String TAG = "rate/" + PersistenceHelper.class.getSimpleName();
 
-    private static PreferenceHelper instance = null;
+    private static PersistenceHelper instance = null;
 
     private SharedPreferences mPreferences;
 
-    protected PreferenceHelper(Context context) {
+    protected PersistenceHelper(Context context) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    static PreferenceHelper from(Context context) {
+    static PersistenceHelper from(Context context) {
         if ((instance == null || instance.mPreferences == null) && context != null) {
-            instance = new PreferenceHelper(context);
+            instance = new PersistenceHelper(context);
         }
         return instance;
     }

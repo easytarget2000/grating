@@ -119,11 +119,11 @@ public class RatingCoordinator {
         return mSupportEmail;
     }
 
-    public void handleLaunch(final Context context) {
-        if (PreferenceHelper.isFirstLaunch(context)) {
-            PreferenceHelper.setInstallDate(context);
+    public void handleLaunch(@NonNull final Context context) {
+        if (PersistenceHelper.isFirstLaunch(context)) {
+            PersistenceHelper.setInstallDate(context);
         }
-        PreferenceHelper.from(context).increaseNumberOfLaunches();
+        PersistenceHelper.from(context).increaseNumberOfLaunches();
     }
 
     public void onPause() {
@@ -134,7 +134,7 @@ public class RatingCoordinator {
         }
     }
 
-    public void ignoreUsageOnce() {
+    public void ignoreConditionsOnce() {
         if (mVerbose) {
             Log.d(TAG, "Will ignore usage counters once.");
         }
@@ -142,7 +142,7 @@ public class RatingCoordinator {
     }
 
     public void onResume(@NonNull final Activity activity) {
-        final boolean ratingAgreed = PreferenceHelper.isRatingEnabled(activity);
+        final boolean ratingAgreed = PersistenceHelper.isRatingEnabled(activity);
         if (mVerbose) {
             Log.d(TAG, "Agreed to rating: " + ratingAgreed);
         }
@@ -165,7 +165,7 @@ public class RatingCoordinator {
     }
 
     public void handleEvent(final Activity activity) {
-        PreferenceHelper.from(activity).increaseNumberOfRatingEvents();
+        PersistenceHelper.from(activity).increaseNumberOfRatingEvents();
     }
 
     private void showRateDialogIfMeetsConditions(@NonNull final Activity activity) {
@@ -182,13 +182,13 @@ public class RatingCoordinator {
     }
 
     private void resetConditions(final Context context) {
-        PreferenceHelper.from(context).resetNumberOfRatingEvents();
+        PersistenceHelper.from(context).resetNumberOfRatingEvents();
         mIgnoreUsage = false;
     }
 
     private boolean shouldShowRateDialog(final Context context) {
 
-        if (!PreferenceHelper.isRatingEnabled(context)) {
+        if (!PersistenceHelper.isRatingEnabled(context)) {
             return false;
         }
 
@@ -212,7 +212,7 @@ public class RatingCoordinator {
     }
 
     private boolean didReachNumberOfLaunches(final Context context) {
-        final int numberOfLaunches = PreferenceHelper.from(context).getNumberOfLaunches();
+        final int numberOfLaunches = PersistenceHelper.from(context).getNumberOfLaunches();
 
         if (mVerbose) {
             Log.d(TAG, "Number of launches: " + numberOfLaunches + "/" + mNumberOfLaunchesThreshold);
@@ -221,7 +221,7 @@ public class RatingCoordinator {
     }
 
     private boolean didReachInstallationAge(final Context context) {
-        final long installDate = PreferenceHelper.getInstallDate(context);
+        final long installDate = PersistenceHelper.getInstallDate(context);
         if (mVerbose) {
             Log.d(TAG, "Installation Date: " + new Date(installDate));
         }
@@ -229,7 +229,7 @@ public class RatingCoordinator {
     }
 
     private boolean didReachNumberOfEvents(final Context context) {
-        final int numberOfEvents = PreferenceHelper.from(context).getNumberOfRatingEvents();
+        final int numberOfEvents = PersistenceHelper.from(context).getNumberOfRatingEvents();
         if (mVerbose) {
             Log.d(TAG, "Number of events: " + numberOfEvents + "/" + mNumberOfEventThreshold);
         }
@@ -237,7 +237,7 @@ public class RatingCoordinator {
     }
 
     private boolean didReachReminderAge(final Context context) {
-        final long remindDate = PreferenceHelper.getRemindSelectedDate(context);
+        final long remindDate = PersistenceHelper.getRemindSelectedDate(context);
         if (mVerbose) {
             Log.d(TAG, "'Reminder Selected' date: " + new Date(remindDate));
             Log.d(TAG, "Reminder after " + mDaysTillReminder + " days.");
@@ -256,12 +256,12 @@ public class RatingCoordinator {
     }
 
     void didSelectRemindLater(@NonNull final Context context) {
-        PreferenceHelper.setRemindSelectedDate(context);
+        PersistenceHelper.setRemindSelectedDate(context);
         mNumberOfLaunchesThreshold += mNumberOfLaunchesReminderIncrease;
     }
 
     void didSelectDisable(@NonNull final Context context) {
-        PreferenceHelper.from(context).disableRating();
+        PersistenceHelper.from(context).disableRating();
 
     }
 }
