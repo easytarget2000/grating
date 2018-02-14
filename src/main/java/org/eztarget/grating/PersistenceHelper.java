@@ -3,6 +3,7 @@ package org.eztarget.grating;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 /**
@@ -14,19 +15,14 @@ class PersistenceHelper {
 
     private static final String TAG = "rate/" + PersistenceHelper.class.getSimpleName();
 
-    private static PersistenceHelper instance = null;
-
     private SharedPreferences mPreferences;
 
-    protected PersistenceHelper(Context context) {
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    protected PersistenceHelper(@NonNull final Context context) {
+        mPreferences = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
-    static PersistenceHelper from(Context context) {
-        if ((instance == null || instance.mPreferences == null) && context != null) {
-            instance = new PersistenceHelper(context);
-        }
-        return instance;
+    static PersistenceHelper from(@NonNull final Context context) {
+        return new PersistenceHelper(context);
     }
 
     private static final String PREF_FILE_NAME = "android_rate_pref_file";
@@ -37,43 +33,34 @@ class PersistenceHelper {
 
     private static final String PREF_KEY_EVENT_TIMES = "android_rate_event_times";
 
-    private static SharedPreferences getPreferences(Context context) {
-        return context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-    }
-
-    private static SharedPreferences.Editor getPreferencesEditor(Context context) {
-        return getPreferences(context).edit();
-    }
-
     void disableRating() {
         edit(PREF_KEY_IS_AGREE_SHOW_DIALOG, false);
     }
 
-    static boolean isRatingEnabled(Context context) {
-        return getPreferences(context).getBoolean(PREF_KEY_IS_AGREE_SHOW_DIALOG, true);
+    boolean isRatingEnabled() {
+        return mPreferences.getBoolean(PREF_KEY_IS_AGREE_SHOW_DIALOG, true);
     }
 
-    static void setRemindSelectedDate(Context context) {
-        SharedPreferences.Editor editor = getPreferencesEditor(context);
+    void setRemindSelectedDate() {
+        final SharedPreferences.Editor editor = mPreferences.edit();
         editor.remove(PREF_KEY_REMIND_INTERVAL);
-        editor.putLong(PREF_KEY_REMIND_INTERVAL, System.currentTimeMillis());
-        commitOrApply(editor);
+        editor.apply();
+
+        edit(PREF_KEY_REMIND_INTERVAL, System.currentTimeMillis());
     }
 
-    static long getRemindSelectedDate(final Context context) {
-        return getPreferences(context).getLong(PREF_KEY_REMIND_INTERVAL, 0);
+    long getRemindSelectedDate() {
+        return mPreferences.getLong(PREF_KEY_REMIND_INTERVAL, 0);
     }
 
     private static final String PREF_KEY_INSTALL_DATE = "android_rate_install_date";
 
-    static void setInstallDate(final Context context) {
-        SharedPreferences.Editor editor = getPreferencesEditor(context);
-        editor.putLong(PREF_KEY_INSTALL_DATE, System.currentTimeMillis());
-        commitOrApply(editor);
+    void setInstallDate() {
+        edit(PREF_KEY_INSTALL_DATE, System.currentTimeMillis());
     }
 
-    static long getInstallDate(Context context) {
-        return getPreferences(context).getLong(PREF_KEY_INSTALL_DATE, 0);
+    long getInstallDate() {
+        return mPreferences.getLong(PREF_KEY_INSTALL_DATE, 0);
     }
 
     private static final String PREF_KEY_LAUNCH_TIMES = "android_rate_launch_times";
@@ -94,8 +81,8 @@ class PersistenceHelper {
         return mPreferences.getInt(PREF_KEY_LAUNCH_TIMES, 0);
     }
 
-    static boolean isFirstLaunch(Context context) {
-        return getPreferences(context).getLong(PREF_KEY_INSTALL_DATE, 0) == 0L;
+    boolean isFirstLaunch() {
+        return mPreferences.getLong(PREF_KEY_INSTALL_DATE, 0) == 0L;
     }
 
     int getNumberOfRatingEvents() {
@@ -120,32 +107,34 @@ class PersistenceHelper {
     Accessories
      */
 
-    private void edit(final String key, final boolean value) {
-        SharedPreferences.Editor editor = mPreferences.edit();
+    private void edit(@NonNull final String key, final boolean value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putBoolean(key, value);
         editor.apply();
     }
 
-    private void edit(final String key, final int value) {
-        SharedPreferences.Editor editor = mPreferences.edit();
+    private void edit(@NonNull final String key, final int value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt(key, value);
         editor.apply();
     }
 
-    private void edit(final String key, final String value) {
-        SharedPreferences.Editor editor = mPreferences.edit();
+    private void edit(@NonNull final String key, final long value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
+    private void edit(@NonNull final String key, final String value) {
+        final SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(key, value);
         editor.apply();
     }
 
-    private void remove(final String key) {
+    private void remove(@NonNull final String key) {
         final SharedPreferences.Editor editor = mPreferences.edit();
         editor.remove(key);
         editor.apply();
     }
 
-
-    private static void commitOrApply(SharedPreferences.Editor editor) {
-        editor.apply();
-    }
 }

@@ -120,10 +120,11 @@ public class RatingCoordinator {
     }
 
     public void handleLaunch(@NonNull final Context context) {
-        if (PersistenceHelper.isFirstLaunch(context)) {
-            PersistenceHelper.setInstallDate(context);
+        final PersistenceHelper persistenceHelper = PersistenceHelper.from(context);
+        if (persistenceHelper.isFirstLaunch()) {
+            persistenceHelper.setInstallDate();
         }
-        PersistenceHelper.from(context).increaseNumberOfLaunches();
+        persistenceHelper.increaseNumberOfLaunches();
     }
 
     public void onPause() {
@@ -142,7 +143,7 @@ public class RatingCoordinator {
     }
 
     public void onResume(@NonNull final Activity activity) {
-        final boolean ratingAgreed = PersistenceHelper.isRatingEnabled(activity);
+        final boolean ratingAgreed = PersistenceHelper.from(activity).isRatingEnabled();
         if (mVerbose) {
             Log.d(TAG, "Agreed to rating: " + ratingAgreed);
         }
@@ -187,7 +188,7 @@ public class RatingCoordinator {
     }
 
     public boolean isEnabled(@NonNull final Context context) {
-        return PersistenceHelper.isRatingEnabled(context);
+        return PersistenceHelper.from(context).isRatingEnabled();
     }
 
     public boolean shouldShowRateDialog(@NonNull final Context context) {
@@ -225,7 +226,7 @@ public class RatingCoordinator {
     }
 
     private boolean didReachInstallationAge(final Context context) {
-        final long installDate = PersistenceHelper.getInstallDate(context);
+        final long installDate = PersistenceHelper.from(context).getInstallDate();
         if (mVerbose) {
             Log.d(TAG, "Installation Date: " + new Date(installDate));
         }
@@ -240,8 +241,8 @@ public class RatingCoordinator {
         return numberOfEvents > mNumberOfEventThreshold;
     }
 
-    private boolean didReachReminderAge(final Context context) {
-        final long remindDate = PersistenceHelper.getRemindSelectedDate(context);
+    private boolean didReachReminderAge(@NonNull final Context context) {
+        final long remindDate = PersistenceHelper.from(context).getRemindSelectedDate();
         if (mVerbose) {
             Log.d(TAG, "'Reminder Selected' date: " + new Date(remindDate));
             Log.d(TAG, "Reminder after " + mDaysTillReminder + " days.");
@@ -260,7 +261,7 @@ public class RatingCoordinator {
     }
 
     void didSelectRemindLater(@NonNull final Context context) {
-        PersistenceHelper.setRemindSelectedDate(context);
+        PersistenceHelper.from(context).setRemindSelectedDate();
         mNumberOfLaunchesThreshold += mNumberOfLaunchesReminderIncrease;
     }
 
