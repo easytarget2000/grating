@@ -192,7 +192,7 @@ public class RatingCoordinator {
 
     public boolean shouldShowRateDialog(@NonNull final Context context) {
 
-        if (!isEnabled()) {
+        if (!isEnabled(context)) {
             return false;
         }
 
