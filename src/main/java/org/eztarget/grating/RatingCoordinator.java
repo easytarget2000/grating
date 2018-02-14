@@ -174,7 +174,7 @@ public class RatingCoordinator {
         }
     }
 
-    private void showRateDialog(@NonNull Activity activity) {
+    public void showRateDialog(@NonNull Activity activity) {
         if (!activity.isFinishing()) {
             resetConditions(activity);
             new RatingNavigator(activity).showDialog(!TextUtils.isEmpty(mSupportEmail));
@@ -186,9 +186,13 @@ public class RatingCoordinator {
         mIgnoreUsage = false;
     }
 
-    private boolean shouldShowRateDialog(final Context context) {
+    public boolean isEnabled(@NonNull final Context context) {
+        return PersistenceHelper.isRatingEnabled(context);
+    }
 
-        if (!PersistenceHelper.isRatingEnabled(context)) {
+    public boolean shouldShowRateDialog(@NonNull final Context context) {
+
+        if (!isEnabled()) {
             return false;
         }
 
